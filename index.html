@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101629">
+  <meta name="description" content="MULTO AI — студия мультяшных видео">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>MULTO AI</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101629;--panel:#1b2742;--cyan:#54d6e8;--yellow:#ffd34e;--muted:#b8c5dd}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:16px system-ui,-apple-system,Segoe UI,sans-serif}
+    main{max-width:620px;margin:auto;padding:20px 16px 40px}
+    header{display:flex;align-items:center;gap:12px;margin:8px 0 22px}.logo{background:var(--cyan);color:#101629;border-radius:14px;padding:10px;font-size:24px}
+    h1{font-size:24px;margin:0;font-weight:900;letter-spacing:.5px}header small{color:var(--cyan);font-weight:800;letter-spacing:1px}
+    .tag{margin-left:auto;color:var(--yellow);font-size:12px;font-weight:800}
+    .hero,.card{background:var(--panel);border-radius:22px;padding:18px;margin:14px 0}
+    .eyebrow{color:var(--yellow);font-size:11px;font-weight:900;letter-spacing:1px}
+    h2{font-size:25px;line-height:1.12;margin:8px 0}.muted{color:var(--muted);line-height:1.5;font-size:14px}
+    .stage{height:170px;border-radius:18px;background:radial-gradient(circle at 70% 25%,#263e6a,#111c35 65%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-top:14px}
+    .person{display:flex;flex-direction:column;align-items:center}.head{width:76px;height:76px;border-radius:50%;background:#080b14;display:flex;align-items:center;justify-content:center;gap:16px}
+    .eye{width:9px;height:9px;border-radius:50%;background:white}.body{width:104px;height:64px;border-radius:25px 25px 8px 8px;background:#2869d8;display:grid;place-items:center;font-weight:900;font-size:12px}
+    .star{position:absolute;right:22px;top:18px;color:var(--yellow);font-size:28px}
+    label{display:block;color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:.7px;margin:18px 0 8px}
+    input,textarea,select{width:100%;border:1px solid #53617a;border-radius:13px;background:#111c35;color:#fff;padding:13px;font:inherit;outline:none}
+    textarea{min-height:112px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
+    button{border:0;border-radius:15px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer}
+    .primary{width:100%;background:var(--cyan);color:#101629;margin-top:20px}.secondary{background:#293a5c;color:#fff}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#293a5c;color:#fff;padding:9px 12px;border-radius:999px;font-size:13px}.chip[aria-pressed=true]{background:var(--cyan);color:#101629}
+    #result{white-space:pre-wrap;line-height:1.55;font-size:14px;color:#e9f0ff}
+    footer{text-align:center;color:#8794ae;font-size:11px;margin-top:20px}
+    @media(min-width:520px){main{padding-top:28px}}
+  </style>
+</head>
+<body>
+<main>
+  <header><div class="logo">🎬</div><div><h1>MULTO AI</h1><small>СТУДИЯ МУЛЬТФИЛЬМОВ</small></div><div class="tag">BETA</div></header>
+  <section class="hero">
+    <div class="eyebrow">ТВОЯ ИДЕЯ → МУЛЬТФИЛЬМ</div>
+    <h2>Расскажи свою историю</h2>
+    <div class="muted">Создавай идеи для коротких 2D-мультфильмов в вертикальном формате 9:16.</div>
+    <div class="stage"><div class="person"><div class="head"><i class="eye"></i><i class="eye"></i></div><div class="body">MULTO</div></div><div class="star">★</div></div>
+  </section>
+  <section class="card">
+    <label for="title">НАЗВАНИЕ РОЛИКА</label>
+    <input id="title" value="Что будет, если исчезнет Луна?">
+    <label for="idea">ОПИШИ СЮЖЕТ ИЛИ ТЕМУ</label>
+    <textarea id="idea">Объясни простыми словами, что произойдёт с Землёй, океанами и ночным небом, если Луна внезапно исчезнет.</textarea>
+    <label>ДЛИТЕЛЬНОСТЬ</label>
+    <div class="chips" id="durations">
+      <button class="chip" aria-pressed="false">30 секунд</button><button class="chip" aria-pressed="true">60 секунд</button><button class="chip" aria-pressed="false">3 минуты</button><button class="chip" aria-pressed="false">5 минут</button>
+    </div>
+    <label for="voice">ОЗВУЧКА</label>
+    <select id="voice"><option>Энергичный рассказчик</option><option>Спокойный рассказчик</option><option>Несколько персонажей</option></select>
+    <button class="primary" id="make">✨ СОЗДАТЬ ПЛАН МУЛЬТФИЛЬМА</button>
+    <div id="result" class="muted" aria-live="polite" style="margin-top:16px"></div>
+  </section>
+  <footer>Демонстрационная версия. Для генерации настоящего видео нужно подключить сервер ИИ, озвучку и видеосборку.</footer>
+</main>
+<script>
+  let duration="60 секунд";
+  document.querySelectorAll("#durations .chip").forEach(b=>b.addEventListener("click",()=>{
+    duration=b.textContent;
+    document.querySelectorAll("#durations .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  }));
+  document.getElementById("make").addEventListener("click",()=>{
+    const title=document.getElementById("title").value.trim();
+    const idea=document.getElementById("idea").value.trim();
+    const voice=document.getElementById("voice").value;
+    const out=document.getElementById("result");
+    if(!title||!idea){out.textContent="Добавь название и описание сюжета.";return;}
+    out.textContent=`ЗАЯВКА MULTO AI\\n\\nНазвание: ${title}\\nТема: ${idea}\\nДлительность: ${duration}\\nОзвучка: ${voice}\\nФормат: вертикальный 9:16\\nСтиль: 2D, тёмный фон, человечек в синей толстовке, крупные субтитры.\\n\\nЭто пока демонстрационный план, а не готовое видео. Для настоящей генерации нужно подключить ИИ-сервисы на сервере.`;
+  });
+  if("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }
+</script>
+</body>
+</html>
